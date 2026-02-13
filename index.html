@@ -1,0 +1,383 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>Leo Post Service</title>
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<style>
+/* 💖 CUSTOM FONT */
+@font-face{
+  font-family:'CupidLove';
+  src:url('fonts/Cupid Love.ttf') format('truetype');
+}
+
+/* RESET */
+*{
+  margin:0;
+  padding:0;
+  box-sizing:border-box;
+  font-family:'Poppins', sans-serif;
+}
+
+/* BODY */
+body{
+  height:100vh;
+  background:url(Images/PINK.jpg) no-repeat center/cover;
+  display:flex;
+  flex-direction:column;
+  justify-content:flex-start;   /* 🔥 TOP alignment */
+  align-items:center;
+  overflow:hidden;
+  color:#ffffff;
+  text-align:center;
+  position:relative;
+}
+
+/* vignette */
+body::after{
+  content:"";
+  position:fixed;
+  inset:0;
+  background:radial-gradient(circle at center, transparent 40%, rgba(0,0,0,0.25));
+  pointer-events:none;
+}
+
+/* CARD */
+.game-container{
+  padding:20px 30px 40px; /* 🔥 bottom padding reduced */
+  background:rgba(255, 255, 255, 0.31);
+  border-radius:28px;
+  box-shadow:0 30px 60px rgba(0,0,0,0.25);
+  max-width:920px;
+  width:90%;
+  position:relative;
+  z-index:2;
+}
+
+/* card bottom shadow (merge feel) */
+.game-container::after{
+  content:"";
+  position:absolute;
+  left:50%;
+  bottom:-8px;
+  transform:translateX(-50%);
+  width:140px;
+  height:26px;
+  background:rgba(0,0,0,0.18);
+  filter:blur(18px);
+  border-radius:50%;
+}
+
+/* TEXT */
+.question{
+  font-family:'CupidLove', cursive;
+  font-size:1.8rem;
+  line-height:1.6;
+  margin-bottom:30px;
+  white-space:pre-line;
+  text-shadow:0 3px 10px rgba(0,0,0,0.35);
+  background: linear-gradient(
+    transparent,
+    rgba(255,255,255,0.15),
+    transparent
+  );
+}
+
+/* BUTTON */
+.buttons button{
+  background:#f48fb1;
+  color:#fff;
+  border:none;
+  padding:14px 34px;
+  font-size:20px;
+  border-radius:30px;
+  cursor:pointer;
+  font-family:'CupidLove', cursive;
+
+  animation: pulse 1.6s infinite;
+  transition: transform 0.1s ease, box-shadow 0.1s ease;
+}
+
+/* 🔥 PRESS EFFECT (WORKS NOW) */
+.buttons button:active{
+  animation: none;              /* ⭐ key fix */
+  transform: scale(0.92);
+  box-shadow: inset 0 4px 8px rgba(0,0,0,0.25);
+}
+
+
+.fade{
+  animation: fadeText 0.4s ease;
+}
+
+@keyframes fadeText{
+  from{opacity:0; transform:translateY(10px)}
+  to{opacity:1; transform:translateY(0)}
+}
+
+
+
+@keyframes pulse{
+  0%{transform:scale(1)}
+  50%{transform:scale(1.07)}
+  100%{transform:scale(1)}
+}
+
+/* 🔒 CHARACTER – BOTTOM + MERGED */
+.character{
+  position: fixed;
+  bottom: -112px;              /* screen bottom */
+  left: 50%;
+  transform: translateX(-50%);
+  width: 360px;
+  max-width: 85%;
+  z-index: 1;                 /* 🔴 card-ku keela */
+  filter: drop-shadow(0 15px 20px rgba(0,0,0,0.25));
+  pointer-events: none;
+}
+
+.game-container{
+  position: relative;
+  z-index: 5;   /* ✅ character mela */
+  margin-top:80px;
+}
+
+
+/* FINAL LETTER */
+#letterContainer{
+  display:none;
+  flex-direction:column;
+  gap:25px;
+  align-items:center;
+  z-index:3;
+  margin-top:180px;
+}
+
+.letter-line{display:flex;gap:8px}
+
+.letter-line img{
+  height:75px;
+  opacity:0;
+  transform:scale(.5) translateY(20px);
+  transition:.4s;
+}
+.letter-line img.show{
+  opacity:1;
+  transform:scale(1) translateY(0);
+}
+
+
+/* FINAL IMAGE */
+#wishImage{
+  display:none;
+  width:320px;
+  max-width:85%;
+  margin-top:20px;
+  animation:fadeInUp .8s ease;
+}
+@keyframes fadeInUp{
+  from{opacity:0;transform:translateY(30px)}
+  to{opacity:1;transform:translateY(0)}
+}
+
+/* HEARTS */
+.heart{
+  position:fixed;
+  bottom:-20px;
+  font-size:24px;
+  animation:floatUp linear infinite;
+}
+@keyframes floatUp{
+  from{transform:translateY(0);opacity:1}
+  to{transform:translateY(-120vh);opacity:0}
+}
+/* ===== CHARACTER ANIMATIONS ===== */
+
+.animate-pop {
+  animation: popIn 0.5s ease;
+}
+
+@keyframes popIn {
+  0% { transform: translateX(-50%) scale(0.8); opacity: 0; }
+  100% { transform: translateX(-50%) scale(1); opacity: 1; }
+}
+
+.animate-shake {
+  animation: shake 0.6s ease;
+}
+
+@keyframes shake {
+  0% { transform: translateX(-50%) translateX(0); }
+  25% { transform: translateX(-50%) translateX(-6px); }
+  50% { transform: translateX(-50%) translateX(6px); }
+  75% { transform: translateX(-50%) translateX(-6px); }
+  100% { transform: translateX(-50%) translateX(0); }
+}
+
+.animate-sad {
+  animation: sadDrop 0.6s ease;
+}
+
+@keyframes sadDrop {
+  0% { transform: translateX(-50%) translateY(0); }
+  100% { transform: translateX(-50%) translateY(10px); }
+}
+
+.animate-happy {
+  animation: happyBounce 0.6s ease;
+}
+
+@keyframes happyBounce {
+  0% { transform: translateX(-50%) translateY(0); }
+  50% { transform: translateX(-50%) translateY(-12px); }
+  100% { transform: translateX(-50%) translateY(0); }
+}
+
+</style>
+</head>
+
+<body>
+
+<!-- GAME CARD -->
+<div class="game-container" id="game">
+  <div class="question" id="questionText">
+    Neenga than MONISHA Va! Ungaluku Post vandhruku madam.
+  </div>
+  <div class="buttons">
+    <button id="actionBtn" onclick="nextStep()">Ama naan than!!! Kudunga</button>
+  </div>
+</div>
+
+<!-- CHARACTER -->
+<img src="Images/1.png" class="character" id="characterImg">
+
+<!-- FINAL -->
+<div id="letterContainer"></div>
+<img src="Images/10.png" id="wishImage">
+<audio id="bgMusic" src="Nee.mp3" loop></audio>
+
+<script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.6.0/dist/confetti.browser.min.js"></script>
+
+<script>
+  
+  function playCharacterAnimation(className){
+  img.classList.remove(
+    "animate-pop",
+    "animate-shake",
+    "animate-sad",
+    "animate-happy"
+  );
+
+  void img.offsetWidth; // 🔥 re-trigger animation
+  img.classList.add(className);
+}
+
+
+let step=1;
+const q=questionText, btn=actionBtn, img=characterImg;
+const letterBox=document.getElementById("letterContainer");
+const wishImage=document.getElementById("wishImage");
+const music=document.getElementById("bgMusic");playCharacterAnimation("animate-pop"); 
+
+function nextStep(){
+ if(step===1){
+  q.innerText="Irunga madam!!! ungaluku seriya kannu theriyathu nu sonnaru 😄\nNaney padichi soldran...";
+  btn.innerText="Oh! Seri Padinga"; img.src="Images/2.png";
+  playCharacterAnimation("animate-shake");
+ }
+ else if(step===2){
+  q.innerText=" ''Unna pathapo thonala ana pesurapove mudivu pantan...\n Ne mulu paithiyamnu Athunala unakum enakum set agathu\nGood Byeee''' nu eluthirukaru mam 😅";
+  btn.innerText="OHHHHHH OHHHHH😌"; img.src="Images/3.png";
+  playCharacterAnimation("animate-happy");
+ }
+ else if(step===3){
+  q.innerText="Romba mosamanavana irukan...\nKavala padathinga madam ungaluku enna madhriye oru nalla azhagana paiyan kedaipan!!❤️😌";
+  btn.innerText="Bro Unga velaiya Mattum paarunga 👀"; img.src="Images/4.png";
+  playCharacterAnimation("animate-sad");
+ }
+ else if(step===4){
+  q.innerText="Sorry mam... ithula oru sign mattum potrunga ✍️❤️";
+  btn.innerText="Give a Sign"; img.src="Images/5.png";
+  playCharacterAnimation("animate-happy");
+ }
+ else if(step===5){
+  q.innerText="Enna mam… V. Monisha nu potrukinga 🤔";
+  btn.innerText="Ama V.Monisha than ennachu"; img.src="Images/6.png";
+  playCharacterAnimation("animate-shake");
+ }
+ else if(step===6){
+  q.innerText="Ayayo 😰 Door No 9/2 ku bathila 2/9 ku vanthutan \nIthu B. Monisha ku vandhiruku madam📦";
+  btn.innerText="Apo enaku ilaya ?"; img.src="Images/7.png";
+  playCharacterAnimation("animate-sad");
+ }
+ else if(step===7){
+  q.innerText="Sorry!!! Mam\nIthuthan ungaloda letter 💌";
+  btn.innerText="Take"; img.src="Images/8.png";
+ }
+ else if(step===8){
+  document.getElementById("game").style.display="none";
+  img.style.display="none";
+  letterBox.style.display="flex";
+  wishImage.style.display="block";
+  revealLetters();
+  bigPoppers(); sidePoppers(); startPoppersLoop();
+ }
+ step++;
+}
+
+/* LETTER PNG */
+function createLine(text){
+ const line=document.createElement("div");
+ line.className="letter-line";
+ [...text].forEach(c=>{
+  if(c===" "){
+    let s=document.createElement("div"); s.style.width="28px"; line.appendChild(s);
+  }else{
+    let i=document.createElement("img");
+    i.src=`Images/letters/${c}.png`;
+    line.appendChild(i);
+  }
+ });
+ return line;
+}
+
+function revealLetters(){
+ letterBox.append(createLine("happy valentines day"), createLine("pannada"));
+ document.querySelectorAll(".letter-line img").forEach((l,i)=>{
+  setTimeout(()=>{
+    l.classList.add("show");
+    if(i===0) music.play();
+  }, i*120);
+ });
+ startHearts();
+}
+
+/* HEARTS */
+function startHearts(){
+ setInterval(()=>{
+  const h=document.createElement("div");
+  h.className="heart"; h.innerText="❤️";
+  h.style.left=Math.random()*100+"vw";
+  h.style.animationDuration=(4+Math.random()*3)+"s";
+  document.body.appendChild(h);
+  setTimeout(()=>h.remove(),7000);
+ },300);
+}
+
+/* POPPERS */
+function bigPoppers(){ confetti({particleCount:400,spread:180,origin:{y:0.6}}); }
+function sidePoppers(){
+ confetti({particleCount:150,angle:60,spread:55,origin:{x:0}});
+ confetti({particleCount:150,angle:120,spread:55,origin:{x:1}});
+}
+function startPoppersLoop(){
+ setInterval(()=>confetti({
+  particleCount:80, spread:120,
+  origin:{x:Math.random(), y:Math.random()*0.5}
+ }),1200);
+}
+</script>
+
+</body>
+</html>
